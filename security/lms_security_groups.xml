@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Categoria LMS -->
+    <record id="module_category_lms_security" model="ir.module.category">
+        <field name="name">LMS Security</field>
+        <field name="sequence">30</field>
+    </record>
+
+    <!-- Roles base -->
+    <record id="group_lms_cashier" model="res.groups">
+        <field name="name">LMS / Cajero</field>
+        <field name="category_id" ref="lms_security_base.module_category_lms_security"/>
+    </record>
+
+    <record id="group_lms_supervisor" model="res.groups">
+        <field name="name">LMS / Supervisor</field>
+        <field name="category_id" ref="lms_security_base.module_category_lms_security"/>
+    </record>
+
+    <record id="group_lms_inventory_user" model="res.groups">
+        <field name="name">LMS / Inventario Usuario</field>
+        <field name="category_id" ref="lms_security_base.module_category_lms_security"/>
+    </record>
+
+    <record id="group_lms_accounting_user" model="res.groups">
+        <field name="name">LMS / Contabilidad Usuario</field>
+        <field name="category_id" ref="lms_security_base.module_category_lms_security"/>
+    </record>
+
+    <record id="group_lms_manager" model="res.groups">
+        <field name="name">LMS / Gerencia</field>
+        <field name="category_id" ref="lms_security_base.module_category_lms_security"/>
+    </record>
+
+    <!-- Permisos especiales generales -->
+    <record id="group_lms_pos_open_session" model="res.groups">
+        <field name="name">LMS / POS Puede Abrir Sesion</field>
+        <field name="category_id" ref="lms_security_base.module_category_lms_security"/>
+    </record>
+
+    <record id="group_lms_pos_close_session" model="res.groups">
+        <field name="name">LMS / POS Puede Cerrar Sesion</field>
+        <field name="category_id" ref="lms_security_base.module_category_lms_security"/>
+    </record>
+
+    <!-- Permisos críticos POS -->
+    <record id="group_lms_pos_refund" model="res.groups">
+        <field name="name">LMS / POS Puede Reembolsar</field>
+        <field name="category_id" ref="lms_security_base.module_category_lms_security"/>
+        <field name="comment">
+            Permite ejecutar reembolsos/devoluciones desde el Punto de Venta.
+            No debe asignarse a cajeros.
+        </field>
+    </record>
+
+    <record id="group_lms_pos_cancel_order" model="res.groups">
+        <field name="name">LMS / POS Puede Cancelar Orden</field>
+        <field name="category_id" ref="lms_security_base.module_category_lms_security"/>
+        <field name="comment">
+            Permite cancelar órdenes desde el Punto de Venta.
+            No debe asignarse a cajeros.
+        </field>
+    </record>
+
+    <record id="group_lms_pos_delete_order" model="res.groups">
+        <field name="name">LMS / POS Puede Borrar Orden</field>
+        <field name="category_id" ref="lms_security_base.module_category_lms_security"/>
+        <field name="comment">
+            Permite borrar/eliminar órdenes desde el Punto de Venta.
+            No debe asignarse a cajeros.
+        </field>
+    </record>
+
+    <record id="group_lms_fiscal_reprint" model="res.groups">
+        <field name="name">LMS / Puede Reimprimir Fiscal</field>
+        <field name="category_id" ref="lms_security_base.module_category_lms_security"/>
+    </record>
+
+    <record id="group_lms_vendor_bill_from_receipt" model="res.groups">
+        <field name="name">LMS / Puede Crear Factura Proveedor desde Recepcion</field>
+        <field name="category_id" ref="lms_security_base.module_category_lms_security"/>
+    </record>
+
+    <record id="group_lms_inventory_adjust_approve" model="res.groups">
+        <field name="name">LMS / Puede Aprobar Ajuste de Inventario</field>
+        <field name="category_id" ref="lms_security_base.module_category_lms_security"/>
+    </record>
+
+    <record id="group_lms_ncf_manager" model="res.groups">
+        <field name="name">LMS / Administrador NCF</field>
+        <field name="category_id" ref="lms_security_base.module_category_lms_security"/>
+    </record>
+
+    <record id="group_lms_validate_incoming_pickings" model="res.groups">
+        <field name="name">LMS / Puede Validar Recepciones</field>
+        <field name="category_id" ref="lms_security_base.module_category_lms_security"/>
+    </record>
+
+    <!-- Herencia recomendada de permisos por rol.
+         Cajero queda sin permiso de reembolso, cancelación ni borrado de orden.
+         Supervisor y Gerencia sí heredan esos permisos críticos. -->
+    <record id="group_lms_supervisor" model="res.groups">
+        <field name="implied_ids" eval="[
+            (4, ref('lms_security_base.group_lms_pos_refund')),
+            (4, ref('lms_security_base.group_lms_pos_cancel_order')),
+            (4, ref('lms_security_base.group_lms_pos_delete_order')),
+            (4, ref('lms_security_base.group_lms_pos_close_session'))
+        ]"/>
+    </record>
+
+    <record id="group_lms_manager" model="res.groups">
+        <field name="implied_ids" eval="[
+            (4, ref('lms_security_base.group_lms_supervisor')),
+            (4, ref('lms_security_base.group_lms_pos_refund')),
+            (4, ref('lms_security_base.group_lms_pos_cancel_order')),
+            (4, ref('lms_security_base.group_lms_pos_delete_order')),
+            (4, ref('lms_security_base.group_lms_pos_close_session'))
+        ]"/>
+    </record>
+
+</odoo>
